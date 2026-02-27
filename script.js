@@ -11,21 +11,21 @@
 const COLONIST_BASE = "https://colonist.io";
 
 const ROUTES = {
-  PLAY_NOW: COLONIST_BASE + "/#newRoom",
-  LOBBY: COLONIST_BASE + "/#lobby=1",
+  PLAY_NOW: COLONIST_BASE + "/#newRoom", // create new game
+  LOBBY: COLONIST_BASE + "/#lobby=1", // fallback for games list api fail
 };
 
 const SPINNER_HTML = '<span class="spinner"></span>';
 
+const GAMES_API = "https://n8n.dev.quiq.ly/webhook/colonist-games";
+
 // ----- API -----
 
-// Replace with your deployed Vercel URL after running: cd colonist-api && vercel
-const GAMES_API = "https://n8n.dev.quiq.ly/webhook/colonist-games";
 
 /**
  * Fetch the list of active games.
  *
- * Calls our own proxy API (deployed separately on Vercel) which forwards
+ * Calls our own N8N Webhook which forwards
  * to colonist.io — this avoids CORS issues entirely.
  */
 const fetchGameList = async () => {
@@ -75,6 +75,14 @@ const trackCTA = (button, action) => {
   );
 };
 
+const getRandomGame = (games) => {
+  return games[Math.floor(Math.random() * games.length)];
+}
+
+const navigate = (path) => {
+  window.location.href = path
+}
+
 // ----- Init -----
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -89,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Button 1 — Play Now: route to main play page
   btnPlayNow.addEventListener("click", () => {
     trackCTA(btnPlayNow, "play-now");
-    window.location.href = ROUTES.PLAY_NOW;
+    navigate(ROUTES.PLAY_NOW);
   });
 
   // Button 2 — Live Games: fetch and navigate to a random game immediately
@@ -106,14 +114,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const games = await fetchGameList();
 
       if (games.length > 0) {
-        const game = games[Math.floor(Math.random() * games.length)];
-        window.location.href = COLONIST_BASE + "/#" + game.id;
+        const game = getRandomGame(games)
+        navigate(`${COLONIST_BASE}/#${game.id}`)
       } else {
-        window.location.href = ROUTES.LOBBY;
+        navigate(ROUTES.LOBBY);
       }
     } catch (err) {
       console.warn("Game list fetch failed, falling back to lobby.", err);
-      window.location.href = ROUTES.LOBBY;
+      navigate(ROUTES.LOBBY);
     } finally {
       isFetching = false;
     }
