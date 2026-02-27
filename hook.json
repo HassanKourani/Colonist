@@ -1,0 +1,70 @@
+
+{                                                                                                                                                                                                                                           
+    "name": "Colonist Game List",
+    "nodes": [                                                                                                                                                                                                                                
+      {                                                                                                                                                                                                                                     
+        "parameters": {                  
+          "httpMethod": "GET",
+          "path": "colonist-games",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "id": "webhook-node",
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [250, 300]
+      },
+      {
+        "parameters": {
+          "method": "GET",
+          "url": "https://colonist.io/api/game-list.json",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              { "name": "Accept", "value": "application/json, text/plain, */*" },
+              { "name": "Referer", "value": "https://colonist.io/" },
+              { "name": "User-Agent", "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" },
+              { "name": "sec-ch-ua", "value": "\"Not:A-Brand\";v=\"99\", \"Google Chrome\";v=\"145\", \"Chromium\";v=\"145\"" },
+              { "name": "sec-ch-ua-mobile", "value": "?0" },
+              { "name": "sec-ch-ua-platform", "value": "\"macOS\"" }
+            ]
+          },
+          "options": {}
+        },
+        "id": "http-request-node",
+        "name": "HTTP Request",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [480, 300]
+      },
+      {
+        "parameters": {
+          "respondWith": "allIncomingItems",
+          "options": {}
+        },
+        "id": "respond-node",
+        "name": "Respond to Webhook",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.1,
+        "position": [710, 300]
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [{ "node": "HTTP Request", "type": "main", "index": 0 }]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [{ "node": "Respond to Webhook", "type": "main", "index": 0 }]
+        ]
+      }
+    },
+    "pinData": {},
+    "settings": { "executionOrder": "v1" },
+    "staticData": null,
+    "tags": [],
+    "triggerCount": 0
+  }
