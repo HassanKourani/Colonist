@@ -17,10 +17,6 @@ const ROUTES = {
 
 const SPINNER_HTML = '<span class="spinner"></span>';
 
-const watchLiveHTML = (count) =>
-  `<span class="button-title">WATCH LIVE</span>` +
-  `<span class="button-subtitle">Watch one of the ${count} games live!</span>`;
-
 // ----- API -----
 
 // Replace with your deployed Vercel URL after running: cd colonist-api && vercel
@@ -59,6 +55,26 @@ const setLoading = (button, isLoading) => {
   }
 };
 
+// ----- A/B Tracking -----
+
+/**
+ * Dispatch a bubbling CustomEvent so any external analytics listener
+ * (GA, Mixpanel, internal) can capture CTA interactions without
+ * coupling to this module.
+ */
+const trackCTA = (button, action) => {
+  button.dispatchEvent(
+    new CustomEvent("cta:click", {
+      bubbles: true,
+      detail: {
+        cta: button.dataset.cta,
+        action,
+        experiment: "checkered-cta",
+      },
+    })
+  );
+};
+
 // ----- Init -----
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -72,39 +88,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Button 1 — Play Now: route to main play page
   btnPlayNow.addEventListener("click", () => {
+    trackCTA(btnPlayNow, "play-now");
     window.location.href = ROUTES.PLAY_NOW;
   });
 
-  // Button 2 — Live Games: first click fetches, second click navigates
-  let cachedGames = null;
+  // Button 2 — Live Games: fetch and navigate to a random game immediately
+  let isFetching = false;
 
   btnLiveGames.addEventListener("click", async () => {
-    // Second click — games already fetched, navigate to a random one
-    if (cachedGames) {
-      const game = cachedGames[Math.floor(Math.random() * cachedGames.length)];
-      window.location.href = COLONIST_BASE + "/#" + game.id;
-      return;
-    }
+    if (isFetching) return; // guard against double-clicks during fetch
+    isFetching = true;
 
-    // First click — fetch game list
+    trackCTA(btnLiveGames, "live-games");
     setLoading(btnLiveGames, true);
 
     try {
       const games = await fetchGameList();
 
       if (games.length > 0) {
-        cachedGames = games;
-        btnLiveGames.classList.remove("is-loading");
-        btnLiveGames.innerHTML = watchLiveHTML(games.length);
+        const game = games[Math.floor(Math.random() * games.length)];
+        window.location.href = COLONIST_BASE + "/#" + game.id;
       } else {
         window.location.href = ROUTES.LOBBY;
       }
-    } catch {
+    } catch (err) {
+      console.warn("Game list fetch failed, falling back to lobby.", err);
       window.location.href = ROUTES.LOBBY;
     } finally {
-      if (!cachedGames) {
-        setLoading(btnLiveGames, false);
-      }
+      isFetching = false;
     }
   });
 });

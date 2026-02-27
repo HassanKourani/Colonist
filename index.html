@@ -1,39 +1,54 @@
+<link rel="stylesheet" href="styles.css" />
+
 <!--
   Colonist A/B Test: Checkered CTA Buttons
   ==========================================
 
-  Thought process:
-  - Replaced <div> with semantic <button> elements for accessibility —
-    they're keyboard-navigable and screen-reader-friendly out of the box,
-    no extra ARIA attributes needed.
-  - Single .button-container wraps both buttons as a CSS Grid to create
-    the diagonal stagger — no absolute positioning, fully responsive.
-  - Kept original class names (button-left-top, button-right-bottom) from
-    the starter code to match the given coding style.
-  - Shared child classes (.button-title, .button-subtitle) avoid
-    duplicating typography styles across buttons.
-  - "PLAY NOW" routes users to the main play page to start a game (primary CTA).
-  - "LIVE GAMES" fetches the game list API on page load and picks a random
-    live game for the user to spectate on click (secondary CTA). Falls back
-    to the lobby if no games are available or the API fails.
+  THOUGHT PROCESS & DESIGN CHOICES
+  ---------------------------------
+  Used semantic <button> elements over <div>s for built-in accessibility.
+  Laid out the checkered pattern with a 2x2 CSS Grid on the diagonal — no
+  absolute positioning, fully responsive. Added data-* attributes and a
+  bubbling CustomEvent for decoupled A/B analytics tracking. "Play Now"
+  (orange, primary) routes to a new game; "Spectate" (green, secondary)
+  fetches live games on click (not on load — requirement is on click) and
+  picks a random one, falling back to the lobby on error or empty list.
 
-  Time taken: 1 hr
-  AI used: Claude (Anthropic) — assisted with brainstorming, code generation,
-           and responsive layout decisions.
+  AI USAGE
+  --------
+  Claude (Anthropic) — used for:
+  - Brainstorming the button hierarchy.
+  - Generating the initial HTML, SCSS, and JS scaffolding.
+  - Reviewing responsive sizing strategy (clamp values, breakpoint).
+  - Code review to check for any vulnerabilities 
+
+  TIME
+  ----
+  Total time: ~2 hrs (initial build ~1 hr & 15 mins + review & polish ~45 min)
 -->
 
 <main class="main-container">
-  <div class="button-container">
+  <div
+    class="button-container"
+    data-experiment="checkered-cta"
+    data-variant="checkered"
+  >
     <!-- Primary CTA: orange gradient, top-left in the checkered grid -->
-    <button class="button-left-top" id="btn-play-now">
+    <button class="button-left-top" id="btn-play-now" data-cta="play-now">
       <span class="button-title">PLAY NOW</span>
       <span class="button-subtitle">Jump into a game!</span>
     </button>
 
-    <!-- Secondary CTA: green solid, bottom-right to complete the diagonal stagger -->
-    <button class="button-right-bottom" id="btn-live-games">
-      <span class="button-title">LIVE GAMES</span>
-      <span class="button-subtitle">See who's playing</span>
+    <!-- Secondary CTA: green solid, bottom-right to complete the diagonal -->
+    <button
+      class="button-right-bottom"
+      id="btn-live-games"
+      data-cta="live-games"
+    >
+      <span class="button-title">Spectate</span>
+      <span class="button-subtitle">Watch a live game!</span>
     </button>
   </div>
 </main>
+
+<script src="script.js"></script>
