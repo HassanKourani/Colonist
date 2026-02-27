@@ -1,0 +1,182 @@
+@import url('https://fonts.cdnfonts.com/css/grobold');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap');
+
+// ============================================================
+// Colonist A/B Test — Checkered CTA Buttons
+// ============================================================
+// 2x2 CSS Grid with buttons placed on the diagonal:
+// col 1 row 1 (top-left) and col 2 row 2 (bottom-right).
+// The off-diagonal cells stay empty — checkerboard pattern.
+// ============================================================
+
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+// ----- Variables -----
+
+$orange-start: #F7B731;
+$orange-end: #E8720C;
+$green-base: #4CD137;
+$blue-bg: #3681C9;
+
+$button-aspect-ratio: 700 / 165; // per reference design
+
+// ----- Mixins -----
+
+@mixin cta-button-base {
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: $button-aspect-ratio / 1;
+
+  // Shape
+  border: none;
+  border-radius: clamp(12px, 3vw, 25px);
+  cursor: pointer;
+
+  // Content layout
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 clamp(12px, 4vw, 24px);
+  overflow: hidden;
+
+  // Transitions
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease,
+              filter 0.2s ease;
+
+  // Keyboard focus ring
+  &:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+  }
+
+  // Hover
+  &:hover {
+    transform: scale(1.03);
+    filter: brightness(1.08);
+  }
+
+  // Active (click feedback)
+  &:active {
+    transform: scale(0.98);
+    filter: brightness(0.95);
+  }
+
+  // Loading state — toggled by JS during API fetch
+  &.is-loading {
+    pointer-events: none;
+    filter: brightness(0.9);
+  }
+}
+
+// ----- Container -----
+
+.main-container{ 
+  background: $blue-bg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-container {
+  width: 100%;
+  padding: clamp(10px, 2vw, 16px);
+  box-sizing: border-box;
+  overflow: hidden;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(6px, 1.5vw, 16px);
+}
+
+// ----- Button 1: Play Now (orange gradient, top-left) -----
+
+.button-left-top {
+  @include cta-button-base;
+  grid-column: 1;
+  grid-row: 1;
+
+  background: linear-gradient(to top, $orange-end 0%, $orange-start 100%);
+  box-shadow: 0 6px 20px rgba($orange-end, 0.45);
+
+  &:hover {
+    box-shadow: 0 8px 28px rgba($orange-end, 0.6);
+  }
+}
+
+// ----- Button 2: Spectate (green solid, bottom-right) -----
+
+.button-right-bottom {
+  @include cta-button-base;
+  grid-column: 2;
+  grid-row: 2;
+
+  background: $green-base;
+  box-shadow: 0 6px 20px rgba($green-base, 0.4);
+
+  &:hover {
+    box-shadow: 0 8px 28px rgba($green-base, 0.55);
+  }
+}
+
+// ----- Typography -----
+
+.button-title {
+  font-family: 'Grobold', 'Segoe UI', sans-serif;
+  font-weight: 400;
+  font-size: clamp(14px, 3.5vw, 24px);
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  line-height: 1.2;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.button-subtitle {
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-weight: 600;
+  font-size: clamp(12px, 2vw, 14px);
+  color: rgba(#fff, 0.9);
+  line-height: 1.3;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ----- Loading spinner -----
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(#fff, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Small screens — shrink title, hide subtitle
+@media (max-width: 400px) {
+  .button-title {
+    font-size: clamp(10px, 2.5vw, 14px);
+    letter-spacing: 2px;
+  }
+
+  .button-subtitle {
+    display: none;
+  }
+}

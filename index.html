@@ -1,0 +1,39 @@
+<!--
+  Colonist A/B Test: Checkered CTA Buttons
+  ==========================================
+
+  Thought process:
+  - Replaced <div> with semantic <button> elements for accessibility —
+    they're keyboard-navigable and screen-reader-friendly out of the box,
+    no extra ARIA attributes needed.
+  - Single .button-container wraps both buttons as a CSS Grid to create
+    the diagonal stagger — no absolute positioning, fully responsive.
+  - Kept original class names (button-left-top, button-right-bottom) from
+    the starter code to match the given coding style.
+  - Shared child classes (.button-title, .button-subtitle) avoid
+    duplicating typography styles across buttons.
+  - "PLAY NOW" routes users to the main play page to start a game (primary CTA).
+  - "LIVE GAMES" fetches the game list API on page load and picks a random
+    live game for the user to spectate on click (secondary CTA). Falls back
+    to the lobby if no games are available or the API fails.
+
+  Time taken: 1 hr
+  AI used: Claude (Anthropic) — assisted with brainstorming, code generation,
+           and responsive layout decisions.
+-->
+
+<main class="main-container">
+  <div class="button-container">
+    <!-- Primary CTA: orange gradient, top-left in the checkered grid -->
+    <button class="button-left-top" id="btn-play-now">
+      <span class="button-title">PLAY NOW</span>
+      <span class="button-subtitle">Jump into a game!</span>
+    </button>
+
+    <!-- Secondary CTA: green solid, bottom-right to complete the diagonal stagger -->
+    <button class="button-right-bottom" id="btn-live-games">
+      <span class="button-title">LIVE GAMES</span>
+      <span class="button-subtitle">See who's playing</span>
+    </button>
+  </div>
+</main>
