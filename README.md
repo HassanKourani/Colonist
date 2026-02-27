@@ -2,7 +2,7 @@
 
 A front-end A/B test variant for [colonist.io](https://colonist.io) that replaces the existing stacked CTA buttons with a **checkered diagonal layout** — two buttons placed on opposite corners of a 2x2 grid.
 
-**Time spent:** ~1 hour
+**Time spent:** ~2 hour
 **AI used:** Claude (Anthropic) — assisted with brainstorming, code generation, and responsive layout decisions.
 
 ---
@@ -11,10 +11,10 @@ A front-end A/B test variant for [colonist.io](https://colonist.io) that replace
 
 The component slots into the hero section of the Colonist landing page, replacing the current vertically stacked "Quick Play" / "Play Online" buttons with a diagonal arrangement:
 
-| Position | Button | Action |
-|----------|--------|--------|
-| Top-left | **PLAY NOW** (orange gradient) | Routes to `/#newRoom` to start a game |
-| Bottom-right | **SPECTATE** (green solid) | Fetches live games from API, spectates a random one |
+| Position     | Button                         | Action                                              |
+| ------------ | ------------------------------ | --------------------------------------------------- |
+| Top-left     | **PLAY NOW** (orange gradient) | Routes to `/#newRoom` to start a game               |
+| Bottom-right | **SPECTATE** (green solid)     | Fetches live games from API, spectates a random one |
 
 ---
 
