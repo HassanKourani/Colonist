@@ -26,13 +26,14 @@ $orange-border: #FDD8BD;
 $green-border: #93D86B;
 
 $button-aspect-ratio: 700 / 165; // per reference design
+$breakpoint-small: 450px;
 
 // ----- Mixins -----
 
 @mixin cta-button-base {
   width: 100%;
   max-width: 500px;
-  aspect-ratio: $button-aspect-ratio / 1;
+  aspect-ratio: $button-aspect-ratio;
 
   // Shape
   border: none;
@@ -124,6 +125,7 @@ $button-aspect-ratio: 700 / 165; // per reference design
 }
 
 // ----- Button 2: Spectate (green solid, bottom-right) -----
+// No justify-self here — default `stretch` fills the grid cell, which is intentional.
 
 .button-right-bottom {
   @include cta-button-base;
@@ -153,7 +155,6 @@ $button-aspect-ratio: 700 / 165; // per reference design
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-
 }
 
 .button-subtitle {
@@ -171,7 +172,6 @@ $button-aspect-ratio: 700 / 165; // per reference design
   &.changing {
     opacity: 0;
   }
-
 }
 
 // ----- Loading spinner -----
@@ -248,7 +248,7 @@ $button-aspect-ratio: 700 / 165; // per reference design
 }
 
 // Small screens — shrink title, hide subtitle
-@media (max-width: 450px) {
+@media (max-width: $breakpoint-small) {
   .button-title {
     font-size: clamp(10px, 2.5vw, 14px);
     letter-spacing: 2px;

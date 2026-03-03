@@ -1,6 +1,3 @@
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="styles.css" />
-
 <!--
   Colonist A/B Test: Checkered CTA Buttons
   ==========================================
@@ -22,19 +19,26 @@
   - Generating the initial HTML, SCSS, and JS scaffolding.
   - Reviewing responsive sizing strategy (clamp values, breakpoint).
   - Code review to check for any vulnerabilities 
+  - Help with the animation
 
   TIME
   ----
-  Total time: ~2 hrs (initial build ~1 hr & 15 mins + review & polish ~45 min)
+  Total time: ~3 hrs (initial build ~1 hr & 15 mins + review & polish ~45 min) + 1 hr to iterate and fix requested changes.
 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colonist</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
 
 <main class="main-container">
   <div id="hex-overlay"></div>
-  <div
-    class="button-container"
-    data-experiment="checkered-cta"
-    data-variant="checkered"
-  >
+  <div class="button-container" data-experiment="checkered-cta">
     <!-- Primary CTA: orange gradient, top-left in the checkered grid -->
     <button class="button-left-top" id="btn-play-now" data-cta="play-now">
       <span class="button-title">PLAY NOW</span>
@@ -54,3 +58,5 @@
 </main>
 
 <script src="script.js"></script>
+</body>
+</html>
