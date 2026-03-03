@@ -19,8 +19,11 @@ html, body {
 
 $orange-start: #F7B731;
 $orange-end: #E8720C;
-$green-base: #4CD137;
+$green-start: #49bd03;
+$green-end: #5cdf13;
 $blue-bg: #3681C9;
+$orange-border: #FDD8BD;
+$green-border: #93D86B;
 
 $button-aspect-ratio: 700 / 165; // per reference design
 
@@ -42,7 +45,7 @@ $button-aspect-ratio: 700 / 165; // per reference design
   align-items: center;
   justify-content: center;
   gap: 2px;
-  padding: 0 clamp(12px, 4vw, 24px);
+  padding: clamp(8px, 1.5vw, 16px) clamp(12px, 4vw, 24px);
   overflow: hidden;
 
   // Transitions
@@ -105,6 +108,7 @@ $button-aspect-ratio: 700 / 165; // per reference design
   justify-self: end;
 
   background: linear-gradient(to top, $orange-end 0%, $orange-start 100%);
+  border: 1px solid $orange-border;
   box-shadow: 0 6px 20px rgba($orange-end, 0.45);
 
   &:hover {
@@ -119,11 +123,12 @@ $button-aspect-ratio: 700 / 165; // per reference design
   grid-column: 2;
   grid-row: 2;
 
-  background: $green-base;
-  box-shadow: 0 6px 20px rgba($green-base, 0.4);
+  background: linear-gradient(to top, $green-start 0%, $green-end 100%);
+  border: 1px solid $green-border;
+  box-shadow: 0 6px 20px rgba($green-start, 0.4);
 
   &:hover {
-    box-shadow: 0 8px 28px rgba($green-base, 0.55);
+    box-shadow: 0 8px 28px rgba($green-start, 0.55);
   }
 }
 
@@ -135,26 +140,26 @@ $button-aspect-ratio: 700 / 165; // per reference design
   font-size: clamp(14px, 3.5vw, 24px);
   color: #fff;
   text-transform: uppercase;
-  letter-spacing: 4px;
+  letter-spacing: 1.5px;
   line-height: 1.2;
   white-space: nowrap;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-shadow: 0 2px 4px rgba(#000, 0.25);
+
 }
 
 .button-subtitle {
   font-family: 'Nunito', 'Segoe UI', sans-serif;
   font-weight: 600;
-  font-size: clamp(12px, 2vw, 14px);
-  color: rgba(#fff, 0.9);
+  font-size: clamp(12px, 2vw, 16px);
+  color: #fff;
   line-height: 1.3;
   white-space: nowrap;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-shadow: 0 1px 3px rgba(#000, 0.2);
+
 }
 
 // ----- Loading spinner -----
@@ -174,7 +179,7 @@ $button-aspect-ratio: 700 / 165; // per reference design
 }
 
 // Small screens — shrink title, hide subtitle
-@media (max-width: 400px) {
+@media (max-width: 450px) {
   .button-title {
     font-size: clamp(10px, 2.5vw, 14px);
     letter-spacing: 2px;
