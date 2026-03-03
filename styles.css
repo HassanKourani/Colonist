@@ -178,8 +178,6 @@ html, body {
 #hex-overlay {
   position: fixed;
   inset: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 80px);
   pointer-events: none;
   z-index: 999;
   overflow: hidden;
@@ -190,6 +188,7 @@ html, body {
 }
 
 .hex-tile {
+  position: absolute;
   width: 80px;
   height: 72px;
   background: linear-gradient(to top, #E8720C 0%, #F7B731 100%);

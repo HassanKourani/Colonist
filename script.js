@@ -136,15 +136,19 @@ const buildHexOverlay = () => {
 
   const TILE_W = 80;
   const TILE_H = 72;
+  const ROW_STEP = TILE_H * 0.75; // rows overlap by 25% for honeycomb packing
   const WAVE_MS = 450;
 
-  const cols = Math.ceil(window.innerWidth / TILE_W) + 2;
-  const rows = Math.ceil(window.innerHeight / TILE_H) + 2;
+  const cols = Math.ceil(window.innerWidth / TILE_W) + 3;
+  const rows = Math.ceil(window.innerHeight / ROW_STEP) + 3;
 
   for (let r = 0; r < rows; r++) {
+    const rowOffset = (r % 2 === 1) ? TILE_W / 2 : 0; // stagger odd rows right
     for (let c = 0; c < cols; c++) {
       const tile = document.createElement('div');
       tile.className = 'hex-tile';
+      tile.style.left = `${c * TILE_W + rowOffset - TILE_W}px`;
+      tile.style.top  = `${r * ROW_STEP - ROW_STEP}px`;
       tile.style.animationDelay = `${(c / cols) * WAVE_MS}ms`;
       overlay.appendChild(tile);
     }
