@@ -76,6 +76,13 @@ $button-aspect-ratio: 700 / 165; // per reference design
     pointer-events: none;
     filter: brightness(0.9);
   }
+
+  // Disabled state — both buttons locked during any ongoing animation
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 }
 
 // ----- Container -----

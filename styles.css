@@ -55,6 +55,11 @@ html, body {
   pointer-events: none;
   filter: brightness(0.9);
 }
+.button-left-top:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 .button-left-top {
   grid-column: 1;
   grid-row: 1;
@@ -98,6 +103,11 @@ html, body {
 .button-right-bottom.is-loading {
   pointer-events: none;
   filter: brightness(0.9);
+}
+.button-right-bottom:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 .button-right-bottom {
   grid-column: 2;

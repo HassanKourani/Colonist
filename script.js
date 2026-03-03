@@ -127,6 +127,13 @@ const createRipple = (button) => {
   ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
 };
 
+// ----- Button state -----
+
+const disableBothButtons = () => {
+  document.getElementById('btn-play-now').disabled = true;
+  document.getElementById('btn-live-games').disabled = true;
+};
+
 // ----- Hex overlay -----
 
 const buildHexOverlay = (variant = 'orange') => {
@@ -162,6 +169,7 @@ const buildHexOverlay = (variant = 'orange') => {
 
 const startPlayNowSequence = (button) => {
   const subtitle = button.querySelector('.button-subtitle');
+  disableBothButtons();
 
   // t=0: sound + ripple + subtitle fade
   playFanfare();
@@ -213,6 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isFetching) return; // guard against double-clicks during fetch
     isFetching = true;
 
+    disableBothButtons();
     playFanfare();
     trackCTA(btnLiveGames, "live-games");
     setLoading(btnLiveGames, true);
