@@ -83,25 +83,101 @@ const navigate = (path) => {
   window.location.href = path
 }
 
+// ----- Audio context -----
+
+let _audioCtx = null;
+const getAudioContext = () => {
+  if (!_audioCtx || _audioCtx.state === 'closed') {
+    _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (_audioCtx.state === 'suspended') _audioCtx.resume();
+  return _audioCtx;
+};
+
 // ----- Sound -----
 
-const playClickSound = () => {
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
+const playFanfare = () => {
+  const ctx = getAudioContext();
+  const notes = [261.63, 329.63, 392.00]; // C4, E4, G4
 
-  osc.type = "sine";
-  osc.frequency.setValueAtTime(600, ctx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.08);
+  notes.forEach((freq, i) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const t = ctx.currentTime + i * 0.08;
 
-  gain.gain.setValueAtTime(0.3, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, t);
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.3, t + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
 
-  osc.connect(gain);
-  gain.connect(ctx.destination);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.15);
+  });
+};
 
-  osc.start(ctx.currentTime);
-  osc.stop(ctx.currentTime + 0.1);
+// ----- Ripple -----
+
+const createRipple = (button) => {
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  button.appendChild(ripple);
+  ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+};
+
+// ----- Hex overlay -----
+
+const buildHexOverlay = () => {
+  const overlay = document.getElementById('hex-overlay');
+  if (!overlay) return;
+  overlay.innerHTML = '';
+
+  const TILE_W = 80;
+  const TILE_H = 72;
+  const WAVE_MS = 450;
+
+  const cols = Math.ceil(window.innerWidth / TILE_W) + 2;
+  const rows = Math.ceil(window.innerHeight / TILE_H) + 2;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const tile = document.createElement('div');
+      tile.className = 'hex-tile';
+      tile.style.animationDelay = `${(c / cols) * WAVE_MS}ms`;
+      overlay.appendChild(tile);
+    }
+  }
+
+  overlay.classList.add('active');
+};
+
+// ----- Play Now sequence -----
+
+const startPlayNowSequence = (button) => {
+  const subtitle = button.querySelector('.button-subtitle');
+
+  // t=0: sound + ripple + subtitle fade
+  playFanfare();
+  createRipple(button);
+
+  if (subtitle) subtitle.classList.add('changing');
+
+  // t=150ms: text swap + hex wipe begins
+  setTimeout(() => {
+    if (subtitle) {
+      subtitle.textContent = 'Setting up board...';
+      subtitle.classList.remove('changing');
+    }
+
+    buildHexOverlay();
+
+    // navigate after wave completes: wave (450ms) + tile animation (350ms) + buffer (50ms)
+    setTimeout(() => {
+      navigate(ROUTES.PLAY_NOW);
+    }, 850);
+  }, 150);
 };
 
 // ----- Init -----
@@ -115,11 +191,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Button 1 — Play Now: route to main play page
-  btnPlayNow.addEventListener("click", () => {
-    playClickSound();
-    trackCTA(btnPlayNow, "play-now");
-    navigate(ROUTES.PLAY_NOW);
+  // Button 1 — Play Now: animated sequence then navigate
+  let isSequencePlaying = false;
+
+  btnPlayNow.addEventListener('click', () => {
+    if (isSequencePlaying) return;
+    isSequencePlaying = true;
+    trackCTA(btnPlayNow, 'play-now');
+    startPlayNowSequence(btnPlayNow);
   });
 
   // Button 2 — Live Games: fetch and navigate to a random game immediately
@@ -129,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isFetching) return; // guard against double-clicks during fetch
     isFetching = true;
 
-    playClickSound();
+    playFanfare();
     trackCTA(btnLiveGames, "live-games");
     setLoading(btnLiveGames, true);
 

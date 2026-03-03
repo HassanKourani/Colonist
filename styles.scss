@@ -159,6 +159,11 @@ $button-aspect-ratio: 700 / 165; // per reference design
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: opacity 0.15s ease;
+
+  &.changing {
+    opacity: 0;
+  }
 
 }
 
@@ -176,6 +181,60 @@ $button-aspect-ratio: 700 / 165; // per reference design
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+// ----- Ripple (Play Now click effect) -----
+
+.ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: rgba(#fff, 0.4);
+  transform: scale(0);
+  animation: ripple-out 0.5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes ripple-out {
+  to {
+    transform: scale(80);
+    opacity: 0;
+  }
+}
+
+// ----- Hex tile wipe overlay -----
+
+#hex-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 80px);
+  pointer-events: none;
+  z-index: 999;
+  overflow: hidden;
+  visibility: hidden;
+
+  &.active {
+    visibility: visible;
+  }
+}
+
+.hex-tile {
+  width: 80px;
+  height: 72px;
+  background: linear-gradient(to top, $orange-end 0%, $orange-start 100%);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  transform: scale(0);
+  will-change: transform;
+  animation: hex-in 0.35s ease-out forwards;
+}
+
+@keyframes hex-in {
+  to { transform: scale(1.15); }
 }
 
 // Small screens — shrink title, hide subtitle
