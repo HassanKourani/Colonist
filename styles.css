@@ -197,6 +197,9 @@ html, body {
   will-change: transform;
   animation: hex-in 0.35s ease-out forwards;
 }
+.hex-tile--green {
+  background: linear-gradient(to top, #49bd03 0%, #5cdf13 100%);
+}
 
 @keyframes hex-in {
   to {

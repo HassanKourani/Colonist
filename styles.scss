@@ -230,6 +230,10 @@ $button-aspect-ratio: 700 / 165; // per reference design
   transform: scale(0);
   will-change: transform;
   animation: hex-in 0.35s ease-out forwards;
+
+  &--green {
+    background: linear-gradient(to top, $green-start 0%, $green-end 100%);
+  }
 }
 
 @keyframes hex-in {

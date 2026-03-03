@@ -129,7 +129,7 @@ const createRipple = (button) => {
 
 // ----- Hex overlay -----
 
-const buildHexOverlay = () => {
+const buildHexOverlay = (variant = 'orange') => {
   const overlay = document.getElementById('hex-overlay');
   if (!overlay) return;
   overlay.innerHTML = '';
@@ -141,12 +141,13 @@ const buildHexOverlay = () => {
 
   const cols = Math.ceil(window.innerWidth / TILE_W) + 3;
   const rows = Math.ceil(window.innerHeight / ROW_STEP) + 3;
+  const tileClass = variant === 'green' ? 'hex-tile hex-tile--green' : 'hex-tile';
 
   for (let r = 0; r < rows; r++) {
     const rowOffset = (r % 2 === 1) ? TILE_W / 2 : 0; // stagger odd rows right
     for (let c = 0; c < cols; c++) {
       const tile = document.createElement('div');
-      tile.className = 'hex-tile';
+      tile.className = tileClass;
       tile.style.left = `${c * TILE_W + rowOffset - TILE_W}px`;
       tile.style.top  = `${r * ROW_STEP - ROW_STEP}px`;
       tile.style.animationDelay = `${(c / cols) * WAVE_MS}ms`;
@@ -216,18 +217,24 @@ document.addEventListener("DOMContentLoaded", () => {
     trackCTA(btnLiveGames, "live-games");
     setLoading(btnLiveGames, true);
 
+    const wipeAndNavigate = (url) => {
+      setLoading(btnLiveGames, false);
+      buildHexOverlay('green');
+      setTimeout(() => navigate(url), 850);
+    };
+
     try {
       const games = await fetchGameList();
 
       if (games.length > 0) {
-        const game = getRandomGame(games)
-        navigate(`${COLONIST_BASE}/#${game.id}`)
+        const game = getRandomGame(games);
+        wipeAndNavigate(`${COLONIST_BASE}/#${game.id}`);
       } else {
-        navigate(ROUTES.LOBBY);
+        wipeAndNavigate(ROUTES.LOBBY);
       }
     } catch (err) {
       console.warn("Game list fetch failed, falling back to lobby.", err);
-      navigate(ROUTES.LOBBY);
+      wipeAndNavigate(ROUTES.LOBBY);
     } finally {
       isFetching = false;
     }
